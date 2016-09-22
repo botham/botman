@@ -47,8 +47,8 @@ public class RedisHelper {
       });
   }
 
-  public CompletionStage<String> getUserId(String client, String clientId) {
-    return connection.async().get(client + "-" + clientId);
+  public String getUserId(String client, String clientId) {
+    return connection.sync().get(client + "-" + clientId);
   }
 
   public void terminate() {
