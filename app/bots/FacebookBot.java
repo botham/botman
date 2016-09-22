@@ -54,7 +54,7 @@ public class FacebookBot implements Bot {
               return name;
             });
           } else {
-            checkAndSend(senderId, text, botFather.sendMessage);
+            checkAndSend(senderId, Contract.FACEBOOK, text, botFather.sendMessage);
           }
         }
       }

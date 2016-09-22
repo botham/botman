@@ -34,9 +34,10 @@ public class BotFather {
       Set<String> recipients = message.getRecipients();
       if (!recipients.isEmpty()) {
         for (String userId : recipients) {
-          CompletionStage<String> senderId = redisHelper.getUserId(message.getSenderClient(), message.getSender());
           CompletionStage<User> recipient = redisHelper.getUser(userId);
-          recipient.thenCombineAsync(senderId, (recipientUser, sId) -> {
+          recipient.thenApplyAsync(recipientUser -> {
+            //TODO: multiple recipient case!!!
+            String sId = redisHelper.getUserId(message.getSenderClient(), message.getSender());
             if(recipientUser != null && sId != null) {
               send(recipientUser, sId, text);
             }
@@ -54,7 +55,7 @@ public class BotFather {
   private boolean send(User recipient, String senderId, String text) {
     String client = recipient.getClient();
     String clientId = recipient.getClientId();
-    text = "[@" + senderId + "]: " + text;
+    text = "[+" + senderId + "]: " + text;
     Logger.debug("sent text: " + text);
     try {
       Bot recipientBot = botRegistry.get(client);

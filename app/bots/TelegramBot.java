@@ -45,7 +45,7 @@ public class TelegramBot extends TelegramLongPollingBot implements Bot {
                         });
                     }
                 } else {
-                    checkAndSend(senderId, text, botFather.sendMessage);
+                    checkAndSend(senderId, Contract.TELEGRAM, text, botFather.sendMessage);
                 }
             }
         } catch (Exception ex) {

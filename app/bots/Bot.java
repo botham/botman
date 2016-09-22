@@ -12,10 +12,10 @@ public interface Bot {
 
     void sendMessage(String recipientId, String message);
 
-    default void checkAndSend(String senderId, String text, Function<Message, Void> send) {
+    default void checkAndSend(String senderId, String senderClient, String text, Function<Message, Void> send) {
         Set<String> recipients = MessageParser.extractRecipients(text);
         if(!recipients.isEmpty()) {
-            Message message = new Message(senderId, recipients, text);
+            Message message = new Message(senderId, senderClient, recipients, text);
             send.apply(message);
         }
         else {
