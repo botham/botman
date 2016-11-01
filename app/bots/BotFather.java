@@ -38,10 +38,9 @@ public class BotFather {
           recipient.thenApplyAsync(recipientUser -> {
             //TODO: multiple recipient case!!!
             String sId = redisHelper.getUserId(message.getSenderClient(), message.getSender());
-            if(recipientUser != null && sId != null) {
+            if (recipientUser != null && sId != null) {
               send(recipientUser, sId, text);
-            }
-            else {
+            } else {
               Logger.warn("Either recipientUser or sId or both are null");
             }
             return null;
@@ -74,18 +73,18 @@ public class BotFather {
   CompletionStage<String> registerUser(User user) {
     CompletionStage<User> existsInRedis = redisHelper.getUser(user.getId());
     return existsInRedis.thenComposeAsync(redisUser -> {
-      if(redisUser != null) {
+      if (redisUser != null) {
         return CompletableFuture.completedFuture(UserMessages.USER_ALREADY_EXISTS);
       } else {
         CompletionStage<DBResult> dbFuture = dbHelper.addUser(user);
         return dbFuture.thenComposeAsync(dbResult -> {
-          if(dbResult.isSuccess()) {
+          if (dbResult.isSuccess()) {
             redisHelper.addUser(user);
             return CompletableFuture.completedFuture(UserMessages.USER_REGISTERED);
           } else {
             DBFailureResult dbFailureResult = (DBFailureResult) dbResult;
             int reason = dbFailureResult.getReason();
-            if(reason == Contract.DUPLICATE_ENTRY) {
+            if (reason == Contract.DUPLICATE_ENTRY) {
               return CompletableFuture.completedFuture(UserMessages.USER_ALREADY_EXISTS);
             } else {
               return CompletableFuture.completedFuture(UserMessages.USER_NOT_REGISTERED);
