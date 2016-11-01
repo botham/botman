@@ -41,11 +41,11 @@ public class FacebookBot implements Bot {
         Logger.debug("SenderID: " + senderId + " text: " + node.toString());
 
         if (!text.isEmpty() && !senderId.isEmpty()) {
-          if(text.startsWith("+signup")) {
+          if (text.startsWith("+signup")) {
             String userId = MessageParser.extractUserId(text);
             CompletionStage<String> completionStageName = getUserNameFromFacebook(senderId);
             completionStageName.thenApplyAsync(name -> {
-              if(name != null && userId != null && !userId.isEmpty()) {
+              if (name != null && userId != null && !userId.isEmpty()) {
                 botFather.registerUser(new User(userId, name, Contract.FACEBOOK, senderId)).thenApplyAsync(dbMessage -> {
                   sendMessage(senderId, dbMessage);
                   return null;
@@ -84,11 +84,11 @@ public class FacebookBot implements Bot {
 
   private CompletionStage<String> getUserNameFromFacebook(String senderId) {
     String url = "https://graph.facebook.com/v2.6/" + senderId +
-            "?fields=first_name,last_name&access_token=" + Configuration.facebookBotToken;
+      "?fields=first_name,last_name&access_token=" + Configuration.facebookBotToken;
     WSRequest request = ws.url(url);
 
 
     return request.get().thenApplyAsync(WSResponse::asJson)
-              .thenApplyAsync(name -> name.path("first_name").asText() + " " + name.path("last_name").asText());
+      .thenApplyAsync(name -> name.path("first_name").asText() + " " + name.path("last_name").asText());
   }
 }

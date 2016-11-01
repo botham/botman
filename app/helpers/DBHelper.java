@@ -17,12 +17,6 @@ import java.util.concurrent.CompletionStage;
 @Singleton
 public class DBHelper {
 
-  // http://stackoverflow.com/a/18198349/3671697
-  @FunctionalInterface
-  private interface CheckedFunction<U> {
-    U apply(PreparedStatement p) throws SQLException;
-  }
-
   private Database db;
 
   @Inject
@@ -39,7 +33,7 @@ public class DBHelper {
       statement = connection.prepareStatement(query);
       U u = f.apply(statement);
       result = new DBSuccessResult<>(u);
-    } catch(MySQLIntegrityConstraintViolationException ex) {
+    } catch (MySQLIntegrityConstraintViolationException ex) {
       int reason = Contract.DUPLICATE_ENTRY;
       result = new DBFailureResult(reason);
     } catch (SQLException ex) {
@@ -48,10 +42,10 @@ public class DBHelper {
       result = new DBFailureResult(reason);
     } finally {
       try {
-        if(statement != null) {
+        if (statement != null) {
           statement.close();
         }
-        if(connection != null) {
+        if (connection != null) {
           connection.close();
         }
       } catch (SQLException ex) {
@@ -80,6 +74,12 @@ public class DBHelper {
     };
     String query = "SELECT * FROM User WHERE id = ?";
     return CompletableFuture.supplyAsync(() -> execute(query, queryDB));
+  }
+
+  // http://stackoverflow.com/a/18198349/3671697
+  @FunctionalInterface
+  private interface CheckedFunction<U> {
+    U apply(PreparedStatement p) throws SQLException;
   }
 
 }

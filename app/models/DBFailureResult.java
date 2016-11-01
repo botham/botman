@@ -2,18 +2,18 @@ package models;
 
 public class DBFailureResult implements DBResult {
 
-    private int reason;
+  private int reason;
 
-    public DBFailureResult(int reason) {
-        this.reason = reason;
-    }
+  public DBFailureResult(int reason) {
+    this.reason = reason;
+  }
 
-    public int getReason() {
-        return reason;
-    }
+  public int getReason() {
+    return reason;
+  }
 
-    @Override
-    public boolean isSuccess() {
-        return false;
-    }
+  @Override
+  public boolean isSuccess() {
+    return false;
+  }
 }

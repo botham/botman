@@ -35,7 +35,7 @@ public class RedisHelper {
       .thenApplyAsync(list -> {
         Logger.info("Redis.getUser" + list);
         try {
-          if(list.get(0) == null) {
+          if (list.get(0) == null) {
             return null;
           } else {
             return new User(list);
